@@ -44,12 +44,12 @@ edit_header = "<h2>Encrypt this text for me:</h2>"
 
 cipher_form ="""
 <form action="/cipher" method="post">
-    <textarea type="text" name="cipher-me" style = "height:100px; width:350px;">
+    <textarea type="text" name="cipher-me" style="height:100px; width:350px;">
     </textarea>
     <br>
-    <h4><label>Rotate the characters by this amount:<br>
-    <input type="text" name="rot"/>
-    </label></h4>
+    <label><h4>Rotate the characters by this amount:</h4><br>
+    <input type="number" min="1" value="1" name="rot"/>
+    </label>
 
     <input type="submit"/>
 </form>"""
@@ -76,28 +76,35 @@ class Cipher(webapp2.RequestHandler):
         cipher_me = self.request.get("cipher-me")
         rotate = self.request.get("rot")
 
+        #print("text: " + cipher_me + "rotation: " + rotate)
 
         # if no text was entered return the form with an error message
-        if cipher_me != "" and rotate > 0:
-            # if text was entered, escape it and send it to the encryption function
-            cipher_me = cgi.escape(cipher_me, quote = True)
-
-            #rotate = cgi.escape(rotate, quote = True)
-        else:
+        if cipher_me.isspace() or cipher_me == "":
             error = "missing values"
             error_escaped = cgi.escape(error, quote=True)
             self.redirect("/?error=" + error_escaped)
 
-        ciphered = encrypt(cipher_me, int(rotate))
+        elif rotate.isspace():
+            error = "missing values"
+            error_escaped = cgi.escape(error, quote=True)
+            self.redirect("/?error=" + error_escaped)
+
+        else:
+            # if text was entered, escape it and send it to the encryption function
+            cipher_me = cgi.escape(cipher_me, quote = True)
+            rotate = cgi.escape(rotate, quote = True)
+            ciphered = encrypt(cipher_me,int(rotate))
+
+
 
         answer = """
         <form action="/cipher" method="post">
             <textarea type="text" name="cipher-me" style = "height:100px;
             width:350px;">{0}</textarea>
             <br>
-            <h4><label>Rotate the characters by this amount:<br>
-            <input type="text" name="rot"/>
-            </label></h4>
+            <label><h4>Rotate the characters by this amount:</h4><br>
+            <input type="number" min="1" value="1" name="rot"/>
+            </label>
 
             <input type="submit"/>
         </form>""".format(ciphered)
