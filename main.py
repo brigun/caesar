@@ -79,7 +79,7 @@ class Cipher(webapp2.RequestHandler):
         #print("text: " + cipher_me + "rotation: " + rotate)
 
         # if no text was entered return the form with an error message
-        if cipher_me.isspace() or cipher_me == "":
+        if not cipher_me:
             error = "missing values"
             error_escaped = cgi.escape(error, quote=True)
             self.redirect("/?error=" + error_escaped)

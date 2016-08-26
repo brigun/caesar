@@ -12,8 +12,8 @@ def rotate_char(char, rotation):
         return char
 
     alphabet = ALPHABET_LOWERCASE if char.islower() else ALPHABET_UPPERCASE
-    print("Char is type:",type(char))
-    print("rotation is type:",type(rotation))
+    #print("Char is type:",type(char))
+    #print("rotation is type:",type(rotation))
 
     new_pos = (alphabet_position(char) + rotation) % 26
     return alphabet[new_pos]
